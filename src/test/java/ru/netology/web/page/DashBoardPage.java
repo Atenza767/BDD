@@ -11,46 +11,48 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 
 public class DashBoardPage {
+    private ElementsCollection cards = $$(".list__item div");
     private final String balanceStart = "баланс: ";
-    private final String balanceFinish = " р. ";
+    private final String balanceFinish = " р.";
+
     private final SelenideElement heading = $("[data-test-id=dashboard]");
-    private final ElementsCollection cards = $$(".list__item div");
     private final SelenideElement reloadButton = $("[data-test-id='action-reload']");
 
-    public DashBoardPage () {
-        heading.shouldBe(visible);
+    public DashBoardPage () {heading.should(Condition.visible);}
+
+    private SelenideElement getCard(DataHelper.CardInfo cardInfo) {
+        return cards.find(Condition.attribute("data-test-id", cardInfo.getTestId()));
     }
 
     public int getCardBalance (DataHelper.CardInfo cardInfo) {
-        var text = getCard(cardInfo).getText();
+        String text = getCard(cardInfo).text();
         return extractBalance(text);
     }
-
-//    public int getCardBalance (int index) {
-//        var text = cards.get(index).getText();
-//        return extractBalance(text);
-//    }
 
     public TransferPage selectCardToTransfer(DataHelper.CardInfo cardInfo) {
         getCard(cardInfo).$("button").click();
         return new TransferPage();
     }
 
-    private SelenideElement getCard(DataHelper.CardInfo cardInfo) {
-        return cards.find(Condition.attribute("data-test-id", cardInfo.getTestId()));
+    private int extractBalance (String text) {
+        var start = text.indexOf(balanceStart);
+        var finish = text.indexOf(balanceFinish);
+        var value = text.substring(start + balanceStart.length(), finish);
+        return Integer.parseInt(value);
     }
+
+
+//    public int getCardBalance (int index) {
+//        var text = cards.get(index).getText();
+//        return extractBalance(text);
+//    }
+
 
     public void reloadDashBoardPage() {
         reloadButton.click();
         heading.shouldBe(visible);
     }
 
-    private int extractBalance(String text) {
-        var start = text.indexOf(balanceStart);
-        var finish = text.indexOf(balanceFinish);
-        var value = text.substring(start + balanceStart.length(), finish);
-        return Integer.parseInt(value);
-    }
 
     public void checkCardBalance(DataHelper.CardInfo cardInfo, int expectedBalance) {
         getCard(cardInfo).should(visible).should(text(balanceStart + expectedBalance + balanceFinish));
