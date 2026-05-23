@@ -50,6 +50,7 @@ public class MoneyTransferTest {
         var amount = generateInvalidAmount(secondCardBalance);
         var transferPage = dashBoardPage.selectCardToTransfer(firstCardInfo);
         transferPage.makeTransfer(String.valueOf(amount), secondCardInfo);
+
         assertAll(
                 () -> transferPage.findErrorMassage("Выполнена попытка перевода суммы, превышающей остаток на карте списания"),
                 () -> dashBoardPage.reloadDashBoardPage(),

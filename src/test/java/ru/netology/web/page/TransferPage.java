@@ -6,7 +6,6 @@ import ru.netology.web.data.DataHelper;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selectors.byText;
 import static com.codeborne.selenide.Selenide.$;
