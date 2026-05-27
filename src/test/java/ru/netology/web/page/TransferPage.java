@@ -18,6 +18,7 @@ public class TransferPage {
     private final SelenideElement errorMessage = $("[data-test-id='error-notification'] .notification__content");
 
     public TransferPage() {
+
         transferHead.shouldBe(visible);
     }
 
@@ -33,6 +34,7 @@ public class TransferPage {
     }
 
     public void findErrorMassage(String expectedText) {
+
         errorMessage.should(Condition.visible, Duration.ofSeconds(15)).should(Condition.text(expectedText));
     }
 }
